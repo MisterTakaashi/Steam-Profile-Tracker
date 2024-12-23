@@ -10,7 +10,6 @@ import (
 	"os"
 )
 
-var apiKey = os.Getenv("STEAM_API_KEY")
 var steamUrl = "https://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v1"
 
 type SteamGetRecentlyPlayedGamesResponse struct {
@@ -28,8 +27,8 @@ type SteamGetRecentlyPlayedGamesResponse struct {
 
 func GetRecentlyPlayedGames() (SteamGetRecentlyPlayedGamesResponse, SteamError) {
 	v := url.Values{}
-	v.Add("key", apiKey)
-	v.Add("steamid", os.Getenv("STEAMID"))
+	v.Add("key", os.Getenv("STEAM_API_KEY"))
+	v.Add("steamid", os.Getenv("STEAM_ID"))
 
 	response, error := http.Get(fmt.Sprint(steamUrl, "?", v.Encode()))
 

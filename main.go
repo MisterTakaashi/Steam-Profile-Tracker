@@ -5,9 +5,17 @@ import (
 	"colin-tracker/storage"
 	"log"
 	"time"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	dotEnvErr := godotenv.Load()
+
+	if dotEnvErr != nil {
+		log.Fatalln(dotEnvErr)
+	}
+
 	dat, err := steam.GetRecentlyPlayedGames()
 
 	if err != nil {
