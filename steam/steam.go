@@ -25,7 +25,7 @@ type SteamGetRecentlyPlayedGamesResponse struct {
 	}
 }
 
-func GetRecentlyPlayedGames() (SteamGetRecentlyPlayedGamesResponse, SteamError) {
+func GetRecentlyPlayedGames() (SteamGetRecentlyPlayedGamesResponse, error) {
 	v := url.Values{}
 	v.Add("key", os.Getenv("STEAM_API_KEY"))
 	v.Add("steamid", os.Getenv("STEAM_ID"))
@@ -33,7 +33,7 @@ func GetRecentlyPlayedGames() (SteamGetRecentlyPlayedGamesResponse, SteamError) 
 	response, error := http.Get(fmt.Sprint(steamUrl, "?", v.Encode()))
 
 	if error != nil {
-		return SteamGetRecentlyPlayedGamesResponse{}, SteamApiError{
+		return SteamGetRecentlyPlayedGamesResponse{}, &SteamApiError{
 			Err: error,
 		}
 	}
@@ -41,7 +41,7 @@ func GetRecentlyPlayedGames() (SteamGetRecentlyPlayedGamesResponse, SteamError) 
 	if response.StatusCode > 299 {
 		errBody, _ := io.ReadAll(response.Body)
 
-		return SteamGetRecentlyPlayedGamesResponse{}, SteamApiError{
+		return SteamGetRecentlyPlayedGamesResponse{}, &SteamApiError{
 			Err: errors.New(fmt.Sprintf("Bad result from API: %s", errBody)),
 		}
 	}
@@ -49,7 +49,7 @@ func GetRecentlyPlayedGames() (SteamGetRecentlyPlayedGamesResponse, SteamError) 
 	body, err := io.ReadAll(response.Body)
 
 	if err != nil {
-		return SteamGetRecentlyPlayedGamesResponse{}, SteamResponseError{
+		return SteamGetRecentlyPlayedGamesResponse{}, &SteamResponseError{
 			Err: err,
 		}
 	}
@@ -58,7 +58,7 @@ func GetRecentlyPlayedGames() (SteamGetRecentlyPlayedGamesResponse, SteamError) 
 
 	if err := json.Unmarshal(body, &dat); err != nil {
 		if err != nil {
-			return SteamGetRecentlyPlayedGamesResponse{}, SteamResponseError{
+			return SteamGetRecentlyPlayedGamesResponse{}, &SteamResponseError{
 				Err: err,
 			}
 		}

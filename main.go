@@ -10,10 +10,10 @@ import (
 )
 
 func main() {
-	dotEnvErr := godotenv.Load()
+	err := godotenv.Load()
 
-	if dotEnvErr != nil {
-		log.Fatalln(dotEnvErr)
+	if err != nil {
+		log.Fatalln(err)
 	}
 
 	dat, err := steam.GetRecentlyPlayedGames()
